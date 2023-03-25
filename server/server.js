@@ -5,10 +5,7 @@ const bodyParser = require("body-parser");
 const server = express();
 const port = process.env.PORT || 5959;
 
-server.get("/", (req, res) => {
-  console.log("got a request");
-  res.end("hello world");
-});
+server.use("/bank_api/users", require("./routes/user/Routes"));
 
 server.listen(port, () => {
   console.log(`Server Listening on: http://localhost:${port}`);
