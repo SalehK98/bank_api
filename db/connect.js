@@ -15,11 +15,6 @@ const connectToDB = async () => {
     await client.connect();
     console.log("connected successfully to server");
     const db = client.db("users");
-    // const usersCollection = db.collection("users");
-
-    // do sth
-    // const allResults = await usersCollection.find({}).toArray();
-    // console.log("allResults", allResults);
     return [db, client];
   } catch (error) {
     console.error("errorMSG", error);
