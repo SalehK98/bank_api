@@ -12,9 +12,10 @@ const port = process.env.PORT || 5151;
 
 server.use(express.json());
 server.use("/bank_api/users", require("./routes/user/basic.Routes.js"));
-server.use(isActive);
+// server.use(isActive);
 server.use(
   "/bank_api/users/operations",
+  isActive,
   require("./routes/user/operations.Routes.js")
 );
 server.use(errorHandler);
@@ -22,3 +23,6 @@ server.use(errorHandler);
 server.listen(port, () => {
   console.log(`Server Listening on: http://localhost:${port}`);
 });
+
+// server.use(express.static(__dirname + "/../client/practice/build"));
+// const cors = require("cors");

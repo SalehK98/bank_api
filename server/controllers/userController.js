@@ -70,7 +70,7 @@ const getUser = (req, res) => {
 };
 
 //@desc update user cash
-//@route PUT /bank_api/deposit
+//@route PUT /bank_api/operations/deposit
 //@access Public
 const deposit = asyncHandler(async (req, res) => {
   console.log("deposit put request");
@@ -82,9 +82,18 @@ const deposit = asyncHandler(async (req, res) => {
   await depositToDB(passport_id, cashAmount)
     .then((result) => {
       console.log("deposit result", result);
+      if (
+        result === "1 document(s) matched the filter, updated 1 document(s)"
+      ) {
+        res.status(200).json({ message: "cash deposited successfully" });
+      } else {
+        res.status(400);
+        throw new Error(result);
+      }
     })
     .catch((err) => {
       console.log("error in deposit controller", err);
+      res.json({ message: err });
     });
 });
 
