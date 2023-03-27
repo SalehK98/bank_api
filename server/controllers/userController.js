@@ -1,5 +1,6 @@
 const { connectToDB } = require("../../db/connect");
 const addUserToDB = require("../../db/addUser");
+const depositToDB = require("../../db/deposit");
 const asyncHandler = require("express-async-handler");
 
 //@desc Gel all users
@@ -31,7 +32,7 @@ const addUser = asyncHandler(async (req, res) => {
   const { passport_id, cash, credit, name, active, password, role } = req.body;
   if (!passport_id || !name) {
     res.status(400);
-    throw new Error("got empty fields are empty");
+    throw new Error("got empty fields");
   }
   await addUserToDB(passport_id, name).then((result) => {
     if (result.insertedId) {
@@ -68,6 +69,25 @@ const getUser = (req, res) => {
     });
 };
 
+//@desc update user cash
+//@route PUT /bank_api/deposit
+//@access Public
+const deposit = asyncHandler(async (req, res) => {
+  console.log("deposit put request");
+  const { passport_id, cashAmount } = req.body;
+  if (!passport_id || !cashAmount) {
+    res.status(400);
+    throw new Error("got empty fields");
+  }
+  await depositToDB(passport_id, cashAmount)
+    .then((result) => {
+      console.log("deposit result", result);
+    })
+    .catch((err) => {
+      console.log("error in deposit controller", err);
+    });
+});
+
 //@desc Update users
 //@route PUT /bank_api/users/:id
 //@access public
@@ -88,6 +108,7 @@ module.exports = {
   getUsers,
   addUser,
   getUser,
+  deposit,
   updateUser,
   deleteUser,
 };
