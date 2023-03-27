@@ -1,15 +1,17 @@
-const { Collection } = require("mongodb");
 const { connectToDB } = require("../../db/connect");
+const addUserToDB = require("../../db/addUser");
+const asyncHandler = require("express-async-handler");
 
 //@desc Gel all users
 //@route GET /bank_api/users
 //@access public
-const getUsers = (req, res) => {
+const getUsers = async (req, res) => {
   console.log("get request");
   connectToDB()
     .then(async (result) => {
-      const [Collection, client] = result;
-      const users = await Collection.find({}).toArray();
+      const [db, client] = result;
+      const collection = db.collection("users");
+      const users = await collection.find({}).toArray();
       console.log(users);
       await res.status(200).end(JSON.stringify(users));
       client.close();
@@ -18,29 +20,32 @@ const getUsers = (req, res) => {
     .catch((err) => {
       console.error("getError", err);
     });
-  // .finally(() => {
-  //   client.close();
-  // });
 };
 
 //@desc add a users
 //@route POST /bank_api/users
 //@access public
-const addUser = (req, res) => {
+const addUser = asyncHandler(async (req, res) => {
   console.log("post request");
-  connectToDB()
-    .then(async (result) => {
-      const [collection, client] = result;
-      const inserted = await collection.insertOne({ name: "salehkalouti" });
-      console.log("inserted", inserted);
-      res.status(201).end("added a user");
-      await client.close();
-      console.log("client closed");
-    })
-    .catch((err) => {
-      console.error("postError", err);
-    });
-};
+  //   console.log(req.body);
+  const { passport_id, cash, credit, name, active, password, role } = req.body;
+  if (!passport_id || !name) {
+    res.status(400);
+    throw new Error("got empty fields are empty");
+  }
+  await addUserToDB(passport_id, name).then((result) => {
+    if (result.insertedId) {
+      res.status(201).end("user added");
+    } else {
+      res.status(405);
+      const stringedResult = result.toString();
+      const errMsg = stringedResult.includes("duplicate key error")
+        ? "passport_id already exists"
+        : stringedResult;
+      throw new Error(errMsg);
+    }
+  });
+});
 
 //@desc Gel a users
 //@route GET /bank_api/users/:id
