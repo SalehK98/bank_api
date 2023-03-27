@@ -51,8 +51,21 @@ const addUser = asyncHandler(async (req, res) => {
 //@route GET /bank_api/users/:id
 //@access public
 const getUser = (req, res) => {
-  console.log("get request");
-  res.end(`get a user ${req.params.id}`);
+  connectToDB()
+    .then(async (result) => {
+      const [db, client] = result;
+      const collection = db.collection("users");
+      const users = await collection
+        .find({ passport_id: parseInt(req.params.id) })
+        .toArray();
+      console.log(users);
+      await res.status(200).end(JSON.stringify(users));
+      client.close();
+      console.log("client closed");
+    })
+    .catch((err) => {
+      console.error("getError", err);
+    });
 };
 
 //@desc Update users
