@@ -69,7 +69,7 @@ const getUser = (req, res) => {
     });
 };
 
-//@desc update user cash
+//@desc deposit cash
 //@route PUT /bank_api/operations/deposit
 //@access Public
 const deposit = asyncHandler(async (req, res) => {
@@ -100,10 +100,6 @@ const deposit = asyncHandler(async (req, res) => {
 //@desc Update users
 //@route PUT /bank_api/users/:id
 //@access public
-const updateUser = (req, res) => {
-  console.log("put request");
-  res.end(`update a user ${req.params.id}`);
-};
 
 //@desc delete a users
 //@route DELETE /bank_api/users/:id
