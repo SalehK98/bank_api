@@ -13,7 +13,7 @@ const isActive = asyncHandler(async (req, res, next) => {
       return next();
     } else {
       if (result === "undefined") {
-        res.status(400);
+        res.status(500);
         throw new Error("sth went wrong try again");
       } else if (result === false) {
         res.status(401);

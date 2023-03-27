@@ -40,6 +40,7 @@ const deposit = async (passport_id, cash) => {
       })
       .catch((err) => {
         console.error("deposit error", err);
+        return err;
       });
     return result;
   } catch (error) {

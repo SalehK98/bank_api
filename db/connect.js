@@ -18,6 +18,7 @@ const connectToDB = async () => {
     return [db, client];
   } catch (error) {
     console.error("errorMSG", error);
+    return error;
   }
 };
 
