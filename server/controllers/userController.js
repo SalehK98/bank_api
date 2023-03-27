@@ -114,6 +114,6 @@ module.exports = {
   addUser,
   getUser,
   deposit,
-  updateUser,
+  //   updateUser,
   deleteUser,
 };

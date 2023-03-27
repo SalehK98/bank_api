@@ -3,6 +3,7 @@ const path = require("path");
 // const bodyParser = require("body-parser");
 const errorHandler = require("./middleware/errorHandler.js");
 const isActive = require("./middleware/isActive");
+const isUser = require("./middleware/isUser.js");
 
 const envPath = path.join(__dirname, "../.env");
 const dotenv = require("dotenv").config({ path: envPath });
@@ -15,6 +16,7 @@ server.use("/bank_api/users", require("./routes/user/basic.Routes.js"));
 // server.use(isActive);
 server.use(
   "/bank_api/users/operations",
+  isUser,
   isActive,
   require("./routes/user/operations.Routes.js")
 );

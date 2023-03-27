@@ -1,6 +1,6 @@
 const { connectToDB } = require("./connect");
 
-const checkActive = async (passport_id) => {
+const checkUserExists = async (passport_id) => {
   try {
     const result = await connectToDB()
       .then(async (result) => {
@@ -8,24 +8,21 @@ const checkActive = async (passport_id) => {
         const usersCollection = db.collection("users");
 
         const user = await usersCollection
-          .find({ passport_id: passport_id })
+          .find({ passport_id: parseInt(passport_id) })
           .toArray();
-        const activeStatus = user[0].active;
-        console.log(activeStatus);
         await client.close();
         console.log("client closed");
-
-        return activeStatus;
+        return user[0];
       })
       .catch((err) => {
-        console.error("active error", err);
+        console.error("user exits error error", err);
         return err;
       });
     return result;
   } catch (error) {
-    console.error("check user active error", error);
+    console.error("check user exits error try error", error);
     return error;
   }
 };
 
-module.exports = checkActive;
+module.exports = checkUserExists;
